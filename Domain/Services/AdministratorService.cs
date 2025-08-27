@@ -18,4 +18,27 @@ public class AdministratorService : IAdministratorService
     {
         return _context.Administrators.FirstOrDefault(a => a.Email == loginDTO.Email && a.Password == loginDTO.Password);
     }
+    public Administrator Include(Administrator administrator)
+    {
+        _context.Administrators.Add(administrator);
+        _context.SaveChanges();
+
+        return administrator;
+    }
+    public Administrator? SearchById(int id)
+    {
+        return _context.Administrators.Where(a => a.Id == id).FirstOrDefault();
+    }
+    public List<Administrator> All(int? page)
+    {
+        var query = _context.Administrators.AsQueryable();
+        
+        int pageSize = 10;
+        int currentPage = page ?? 1;
+
+        return query
+            .Skip((currentPage - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
 }
